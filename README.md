@@ -1,6 +1,6 @@
 # ⚡ BUGRAY 
 
-A production-ready, asynchronous CLI debugging engine powered by Gemini LLMs. Built with a modular **Folder-by-Feature (Mono-Feature)** architecture, Bugray functions as an autonomous terminal agent. It utilizes native tool-calling capabilities to actively inspect local filesystems, execute debugging tests in isolated environments, and triage stack traces directly from your command line.
+Asynchronous CLI debugging engine powered by Gemini LLMs. Built with a modular **Folder-by-Feature (Mono-Feature)** architecture, Bugray functions as an autonomous terminal agent. It utilizes native tool-calling capabilities to actively inspect local filesystems, execute debugging tests in isolated environments, and triage stack traces directly from your command line.
 
 ---
 
