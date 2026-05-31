@@ -1,96 +1,150 @@
-# ⚡ BUGRAY 
+# 🤖 AI Agents Monorepo
 
-Asynchronous CLI debugging engine powered by Gemini LLMs. Built with a modular **Folder-by-Feature (Mono-Feature)** architecture, Bugray functions as an autonomous terminal agent. It utilizes native tool-calling capabilities to actively inspect local filesystems, execute debugging tests in isolated environments, and triage stack traces directly from your command line.
+A collection of three specialized AI agents built with modern Python tooling:
+
+- **[BUGRAY](BUGRAY/)** – Asynchronous CLI debugging engine powered by Gemini LLMs.
+- **[skillmatch-ai](skillmatch-ai/)** – Intelligent job matching agent using Groq and Tavily.
+- **[telegram-bot](telegram-bot/)** – Telegram interface for interacting with the skillmatch-ai agent.
+
+Each project is self-contained with its own dependencies and entry points, making it easy to develop, run, and deploy independently.
 
 ---
 
-## 🏗️ System Architecture
+## 📁 Project Structure
+aiagents/
+├── BUGRAY/ # CLI Debugging Agent
+│ ├── agent/ # Core agent logic & tools
+│ ├── main.py # CLI entry point
+│ └── pyproject.toml # uv-managed dependencies
+├── skillmatch-ai/ # Job Matching Agent
+│ ├── agent.py # Agent core & tool definitions
+│ ├── main.py # Terminal entry point
+│ └── pyproject.toml # uv-managed dependencies
+├── telegram-bot/ # Telegram Bot Interface
+│ ├── main.py # Bot handler & message processing
+│ └── pyproject.toml # uv-managed dependencies
+└── README.md # This file
 
-Bugray rejects standard beginner folder-by-type structures in favor of an enterprise-ready, modular **Folder-by-Feature** layout. This ensures the entire core engine loop can be dropped cleanly into any interface provider (CLI, Slack, or Telegram bot gateways) without modifying core orchestration workflows.
+text
 
-```text
-BUGRAY/
-├── 📁 agent/                  # Core Feature Domain
-│   ├── 📁 tools/              # Autonomous Agent Execution Capabilities
-│   │   ├── 🐍 __init__.py     # Tool Registration Manifest
-│   │   ├── 🐍 filesystem.py   # Secure File Reads, Writes, & Diff Scans
-│   │   └── 🐍 terminal.py     # Local Isolated Subprocess Command Executor
-│   ├── 🐍 orchestrator.py     # Asynchronous Multi-Turn Thought/Action Loop
-│   └── 🐍 system_prompt.py    # Strategic Debugging Guardrails & System Persona
-├── ⚙️ .gitignore               # Blocks tracking of heavy local environments & keys
-├── 🐍 config.py               # Application Constants & Gemini Clients Initialization
-├── 🐍 main.py                 # Core CLI Loop & Global Parameter Gateway
-├── ⚙️ pyproject.toml           # Unified Project Manifest (uv standards)
-└── 📄 uv.lock                 # Deterministic Dependency Tree Lockfile
-⚡ Core Features
-Autonomous Tool-Use (Function Calling): The agent does not simply suggest fixes; it actively inspects files via the filesystem tool and validates syntax execution using the terminal tool.
+---
 
-Deterministic Environment Management: Powered by uv for package indexing and workspace locking, guaranteeing absolute zero package drift across different development machines.
+## 🛠️ Prerequisites
 
-Granular Multi-Turn Logic: Features a stateful memory execution thread inside orchestrator.py that continuously processes error diagnostics until a precise patch sequence is achieved.
+- **Python 3.11+** (all projects share this requirement)
+- **uv** – Fast Python package and project manager
+- API keys for the services you intend to use:
+  - BUGRAY → Gemini API
+  - skillmatch-ai → Groq API, Tavily API
+  - telegram-bot → Telegram Bot Token, Groq API, Tavily API
 
-Secure-by-Default Infrastructure: Explicit sandbox constraints built into system prompts with strict automated .env masking to safeguard localized environment variables.
+Install **uv** if you haven't already:
 
-🛠️ Installation & Workspace Setup
-Prerequisites
-Ensure you have uv (the fast Python package manager) installed on your machine:
+```bash
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-PowerShell
-powershell -c "irm uv.pub/install.ps1 | iex"
-1. Clone & Navigate
-Navigate into your unified portfolio workspace root:
+# Windows (PowerShell)
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+🚀 Getting Started
+Each project is entirely independent — navigate to the corresponding folder and follow its specific setup instructions.
 
-DOS
-cd C:\Users\undra\OneDrive\aiagents\BUGRAY
-2. Configure Environment Secrets
-Create your localized workspace .env file to map your API credentials securely:
-
-DOS
-echo GEMINI_API_KEY="your_actual_gemini_api_key_here" > .env
-(Note: .env is automatically ignored by Git rules and will never be exposed to public code streams).
-
-3. Initialize the Locked Environment
-Sync and install the complete deterministic dependency manifest using the uv lock controller:
-
-DOS
+1. Clone the Repository
+bash
+git clone https://github.com/Manojuio/aiagents.git
+cd aiagents
+2. Choose & Set Up a Project
+🔧 BUGRAY – CLI Debugging Agent
+bash
+cd BUGRAY
+echo 'GEMINI_API_KEY="your_gemini_api_key_here"' > .env
 uv sync
-🚀 Execution & Shorthand Integration
-You can execute queries directly inside the virtual environment by targeting the root execution module:
+uv run python main.py "Your debugging query"
+🧩 skillmatch-ai – Job Matching Agent
+bash
+cd skillmatch-ai
+echo 'GROQ_API_KEY="your_groq_api_key_here"' > .env
+echo 'TAVILY_API_KEY="your_tavily_api_key_here"' >> .env
+uv sync
+uv run python main.py
+📱 telegram-bot – Telegram Bot Interface
+bash
+cd telegram-bot
+echo 'GROQ_API_KEY="your_groq_api_key_here"' > .env
+echo 'TAVILY_API_KEY="your_tavily_api_key_here"' >> .env
+echo 'TELEGRAM_BOT_TOKEN="your_telegram_bot_token_here"' >> .env
+uv sync
+uv run python main.py
+🔑 Environment Variables
+Project	Variable	Description
+BUGRAY	GEMINI_API_KEY	Google Gemini API key
+skillmatch-ai	GROQ_API_KEY	Groq Cloud API key
+skillmatch-ai	TAVILY_API_KEY	Tavily Search API key
+telegram-bot	TELEGRAM_BOT_TOKEN	Telegram Bot token (from @BotFather)
+telegram-bot	GROQ_API_KEY	Groq Cloud API key (for agent calls)
+telegram-bot	TAVILY_API_KEY	Tavily Search API key (for agent calls)
+⚠️ Never commit .env files. Each project includes a .gitignore that blocks them automatically.
 
-DOS
+💡 Usage Examples
+BUGRAY – Debugging
+bash
 uv run python main.py "Uncaught TypeError inside server.js on line 24"
-💻 Setting up the Global Terminal Shortcut
-To fire up the engine instantly from any active root directory on your system, add a permanent wrapper shortcut alias directly to your shell profile layout:
+The agent inspects files, runs diagnostic commands, and suggests fixes.
 
-Open your PowerShell profile manifest:
+skillmatch-ai – Job Search (Terminal)
+bash
+uv run python main.py
+Then type queries like:
 
-PowerShell
-   notepad $PROFILE
-Append this operational alias layout to the bottom of your configuration matrix:
+"Find remote Python developer jobs"
 
-PowerShell
-   function bugray_cmd {
-       param([string]$query)
-       uv run --project "C:\Users\undra\OneDrive\aiagents\BUGRAY" "C:\Users\undra\OneDrive\aiagents\BUGRAY\main.py" $query
-   }
-   Set-Alias bugray bugray_cmd
-Reload your active profile instance or restart the host terminal window.
+"Find jobs matching my resume" (after uploading a PDF)
 
-Now, call your debugging assistant seamlessly across any target codebase on your local system:
+telegram-bot – Job Search via Telegram
+Start the bot, send /start, upload your resume as a PDF, and chat naturally:
 
-PowerShell
-bugray "My express server is crashing with JWT verification errors, investigate"
-🧪 License
-Distributed under the MIT License. See LICENSE for more details.
+"Find me Node.js backend roles"
 
+"Score my fit for this job"
 
----
+📄 Documentation
+Each subproject contains its own README.md with detailed instructions, architecture notes, and API references.
 
-### 📤 Update GitHub with Your New README
+BUGRAY README
 
-Now that you've generated the file, push it straight up to your live remote page so your repository home looks professional:
+skillmatch-ai README
 
-```cmd
-git add BUGRAY/README.md
-git commit -m "docs: generate comprehensive modular overview readme for bugray engine"
-git push origin main
+telegram-bot README
+
+🤝 Contributing
+Contributions are welcome! To keep the monorepo clean:
+
+Fork the repository.
+
+Create a feature branch (git checkout -b feature/amazing-feature).
+
+Make your changes within the appropriate subproject folder.
+
+Ensure each subproject remains independent (no cross‑imports between folders).
+
+Submit a pull request.
+
+📜 License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+🙏 Acknowledgements
+Groq – Ultra‑fast LLM inference
+
+Tavily – AI‑powered search
+
+Gemini – Google's LLM family
+
+python-telegram-bot – Telegram Bot API wrapper
+
+uv – Fast Python package manager
+
+*Built with ❤️ using Python 3.11+ and uv.*
+
+text
+
+Just copy this Markdown into a new `README.md` file at the root of your repository. Then, to make the documentation even clearer, it would be helpful to add a short `README.md` inside each subfolder (for example, a brief description of what the project does and how to run it).
